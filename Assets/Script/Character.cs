@@ -27,9 +27,9 @@ public class Character : MonoBehaviour
         return effectFlg.GetBitFlg((int)_effect);
     }
 
-    public DiceObject GetDiceObject(int no)
+    public DiceObject GetDiceObject(int _no)
     {
-        return useDeck[no];
+        return useDeck.GetDiceObject(_no);
     }
 
     public void ChangeHP(Character _target)
