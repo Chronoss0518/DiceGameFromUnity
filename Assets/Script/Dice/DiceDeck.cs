@@ -14,6 +14,10 @@ public class DiceDeck
 
     }
 
+    public void SetDeckName(string _name) { deckName = _name; }
+
+    public string GetDeckName() { return deckName; }
+
     public void SetDiceObject(int _no, DiceObject _obj)
     {
         if (_no >= HAVE_MAX_DICE) return;
@@ -49,6 +53,8 @@ public class DiceDeck
 
         return true;
     }
+
+    string deckName = "";
 
     DiceObject[] dices = new DiceObject[HAVE_MAX_DICE];
 
