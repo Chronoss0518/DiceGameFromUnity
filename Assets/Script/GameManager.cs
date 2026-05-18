@@ -4,24 +4,6 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        turnList[(int)nowTurnType].Update();
-
-        if (!changeTurnFlg) return;
-        nowTurnType = nextTurn;
-        nextTurn = (TurnType)((int)(nextTurn) + 1 % (int)(TurnType.TurnEnd + 1));
-        changeTurnFlg = false;
-    }
-
     public enum TurnType
     {
         TurnStart,
@@ -29,7 +11,6 @@ public class GameManager : MonoBehaviour
         IceCheck,
         StanCheck,
         GuardEndCheck,
-        DoubleEndCheck,
         PandoraDiceCheck,
         SelectAction,//Playerのアクション//
         DiceRollAction,//Playerのアクション//
@@ -37,13 +18,42 @@ public class GameManager : MonoBehaviour
         PandoraDiceStartCheck,
         PandoraDiceCharaSelectAction,//Playerのアクション//
         PandoraDiceRollAction,//Playerのアクション//
+        DoubleEndCheck,
         TurnEnd,
+    }
+
+    abstract public class TurnObjectBase
+    {
+        public void SetGameManager(GameManager _manager) { gameManager = _manager; }
+
+        protected void SetNextNowPlayer() { gameManager.SetNextNowPlayer(); }
+
+        protected Character GetNowPlayer() { return gameManager.characterList[gameManager.nowPlayer]; }
+
+        protected void SetSelectCharacter(int _no) { gameManager.SetSelectCharacter(_no); }
+
+        protected Character GetSelectCharacter() { return gameManager.characterList[gameManager.selectPlayer]; }
+
+        protected bool IsPandoraDice() { return gameManager.pandoraDiceFlg; }
+        
+        protected void ChangeTurn() { gameManager.changeTurnFlg = true; }
+
+        abstract public void Update();
+
+        virtual public void Init() { }
+
+        GameManager gameManager = null;
+    }
+
+    public void SetNextNowPlayer()
+    {
+        nowPlayer = (nowPlayer + 1) % characterList.Count;
     }
 
     public void SetSelectCharacter(int _no)
     {
         if (_no < 0) return;
-        if (characterList.Count <= _no) return ;
+        if (characterList.Count <= _no) return;
         selectPlayer = _no;
     }
 
@@ -59,28 +69,28 @@ public class GameManager : MonoBehaviour
         return characterList[selectPlayer];
     }
 
-    abstract public class TurnBase
+    // Start is called before the first frame update
+    void Start()
     {
-        public void SetGameManager(GameManager _manager) { gameManager = _manager; }
+        
+    }
 
-        public TurnType GetNowTurnType() { return gameManager.nowTurnType; }
+    // Update is called once per frame
+    void Update()
+    {
+        turnObject[(int)nowTurnType].Update();
 
-        public void SetNowTurnType(TurnType _type) { gameManager.nowTurnType = _type; }
+        if (!changeTurnFlg) return;
 
-        public Character GetNowCharacter() { return gameManager.GetNowCharacter(); }
+        nowTurnType = nextTurn;
+        turnObject[(int)nowTurnType].Init();
 
-        public Character GetSelectCharacter() { return gameManager.GetSelectCharacter(); }
+        nextTurn = (TurnType)((int)(nextTurn) + 1 % (int)(TurnType.TurnEnd + 1));
+        changeTurnFlg = false;
+    }
 
-        public bool IsPandoraDice() { return gameManager.pandoraDiceFlg; }
 
-        protected void ChangeTurn() { gameManager.changeTurnFlg = true; }
-
-        abstract public void Update();
-
-        GameManager gameManager = null;
-    };
-
-    TurnBase[] turnList = new TurnBase[(int)(TurnType.TurnEnd) + 1];
+    TurnObjectBase[] turnObject = new TurnObjectBase[(int)TurnType.TurnEnd + 1];
     TurnType nowTurnType = TurnType.TurnStart;
     TurnType nextTurn = TurnType.FutureAttackCheck;
     bool changeTurnFlg = false;
