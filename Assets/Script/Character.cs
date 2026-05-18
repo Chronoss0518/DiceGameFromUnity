@@ -5,11 +5,12 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     public const int HP_MAX = 30;
+    public const int PANDORA_DICE_COUNT = 6;
 
     public enum CharacterEffect : int
     {
-        Stan,
         Ice,
+        Stan,
         Guard,
         Double,
         None,
@@ -31,6 +32,12 @@ public class Character : MonoBehaviour
     {
         return useDeck.GetDiceObject(_no);
     }
+
+    public bool IsPandoraDiceCount() { return pandoraDiceCount < 0; }
+
+    public void SubPandoraDiceCount() { pandoraDiceCount--; }
+
+    public void SetInitPandoraDiceCount(){ pandoraDiceCount = PANDORA_DICE_COUNT; }
 
     public void ChangeHP(Character _target)
     {
@@ -58,6 +65,7 @@ public class Character : MonoBehaviour
     
     ChStd.BitBool effectFlg = new ChStd.BitBool((int)(CharacterEffect.None) / 8 + 1);
     int hp = HP_MAX;
+    int pandoraDiceCount = PANDORA_DICE_COUNT;
 
     DiceDeck useDeck = null;
 }
