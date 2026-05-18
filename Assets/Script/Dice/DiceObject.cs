@@ -11,11 +11,18 @@ public class DiceObject
         abstract public void Update(Character _user,Character _target);
     }
 
-    public DiceEffectObject RunDiceRoll()
+    public string GetDiceName() { return diceName; }
+
+    public void SetDiceName(string _name) { diceName = _name; }
+
+    public DiceEffectObject GetDiceEffectObject(int _num)
     {
-        return diceEffectList[Random.Range(0, DICE_SIDED_COUNT)];
+        if (_num < 0) return null;
+        if (_num >= DICE_SIDED_COUNT) return null;
+        return diceEffectList[_num];
     }
 
+    string diceName = "";
 
     DiceEffectObject[] diceEffectList = new DiceEffectObject[DICE_SIDED_COUNT];
 }
