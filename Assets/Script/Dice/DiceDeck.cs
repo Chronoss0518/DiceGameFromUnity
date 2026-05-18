@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DiceDeck : MonoBehaviour
+public class DiceDeck
 {
     public const int HAVE_MAX_DICE = 4;
 
@@ -37,6 +37,9 @@ public class DiceDeck : MonoBehaviour
 
         return dices[_no];
     }
+
+    public DiceObject GetPandoraDiceObject() { return pandoraDice; }
+
     private bool IsDeckEmpty()
     {
         for(int i = 0;i < HAVE_MAX_DICE;i++)
@@ -48,4 +51,6 @@ public class DiceDeck : MonoBehaviour
     }
 
     DiceObject[] dices = new DiceObject[HAVE_MAX_DICE];
+
+    DiceObject pandoraDice = null;
 }
