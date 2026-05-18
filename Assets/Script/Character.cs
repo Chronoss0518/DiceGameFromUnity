@@ -7,26 +7,33 @@ public class Character : MonoBehaviour
     public const int HP_MAX = 30;
     public const int PANDORA_DICE_COUNT = 6;
 
-    public enum CharacterEffect : int
-    {
-        Ice,
-        Stan,
-        Guard,
-        Double,
-        None,
-    }
-
     public bool IsLose() { return hp < 0; }
 
-    public void SetEffect(CharacterEffect _effect)
+    public void SetIceTurnCount(int _count) { iceTurnCount = _count; }
+
+    public bool IsIceTurn()
     {
-        effectFlg.SetBitTrue((int)_effect);
+        bool res = iceTurnCount > 0;
+        if (res) iceTurnCount--;
+        return res;
     }
 
-    public bool IsEffect(CharacterEffect _effect)
+    public void SetStanFlg() { stanFlg = true; }
+
+    public bool IsStan()
     {
-        return effectFlg.GetBitFlg((int)_effect);
+        bool res = stanFlg;
+        stanFlg = false;
+        return res;
     }
+
+    public void SetGuardFlg(bool _flg) { guardFlg = _flg; }
+
+    public bool IsGuardFlg() { return guardFlg; }
+
+    public void SetDoubleFlg(bool _flg) { doubleFlg = _flg; }
+
+    public bool IsDoubleFlg() { return doubleFlg; }
 
     public DiceObject GetDiceObject(int _no)
     {
@@ -62,8 +69,12 @@ public class Character : MonoBehaviour
     {
         hp += _heal;
     }
-    
-    ChStd.BitBool effectFlg = new ChStd.BitBool((int)(CharacterEffect.None) / 8 + 1);
+
+    int iceTurnCount = 0;
+    bool stanFlg = false;
+    bool guardFlg = false;
+    bool doubleFlg = false;
+
     int hp = HP_MAX;
     int pandoraDiceCount = PANDORA_DICE_COUNT;
 
