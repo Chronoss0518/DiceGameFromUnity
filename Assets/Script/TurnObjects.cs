@@ -14,7 +14,7 @@ public class TurnStartObject : GameManager.TurnObjectBase
 [System.Serializable]
 public class FutureAttackCheckObject : GameManager.TurnObjectBase
 {
-    public void AddFuruteAttackObject(FutureAttackObject _obj)
+    public void AddFutureAttackObject(FutureAttackObject _obj)
     {
         if (_obj == null) return;
         futureAttackObjectList.Add(_obj);
@@ -22,7 +22,11 @@ public class FutureAttackCheckObject : GameManager.TurnObjectBase
 
     public override void Update()
     {
-
+        if(futureAttackObjectList.Count <= 0)
+        {
+            ChangeTurn();
+            return;
+        }
     }
 
     List<FutureAttackObject>futureAttackObjectList = new List<FutureAttackObject>();
@@ -35,7 +39,7 @@ public class IceCheckObject : GameManager.TurnObjectBase
     {
         base.Init();
 
-        var player = GetNowPlayer();
+        var player = GetNowCharacter();
         isIce = player.IsIceTurn();
 
     }
@@ -59,7 +63,7 @@ public class StanCheckObject : GameManager.TurnObjectBase
     {
         base.Init();
 
-        var player = GetNowPlayer();
+        var player = GetNowCharacter();
         isStan = player.IsStan();
 
     }
@@ -81,7 +85,7 @@ public class GuardEndCheckObject : GameManager.TurnObjectBase
 {
     public override void Update()
     {
-        var player = GetNowPlayer();
+        var player = GetNowCharacter();
         player.SetGuardFlg(false);
     }
 }
@@ -93,7 +97,7 @@ public class PandoraDiceCheckObject : GameManager.TurnObjectBase
     {
         base.Init();
 
-        var player = GetNowPlayer();
+        var player = GetNowCharacter();
         isPandora = player.IsPandoraDiceCount();
     }
 
@@ -175,7 +179,8 @@ public class DoubleEndCheckObject : GameManager.TurnObjectBase
 {
     public override void Update()
     {
-
+        var player = GetNowCharacter();
+        player.SetDoubleFlg(false);
     }
 }
 
@@ -184,6 +189,7 @@ public class TurnEndObject : GameManager.TurnObjectBase
 {
     public override void Update()
     {
-
+        SetNextNowPlayer();
+        ChangeTurn();
     }
 }
