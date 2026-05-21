@@ -22,21 +22,23 @@ public class GameManager : MonoBehaviour
         TurnEnd,
     }
 
+    const int TURN_TYPE_COUNT = (int)TurnType.TurnEnd + 1;
+
     abstract public class TurnObjectBase
     {
         public void SetGameManager(GameManager _manager) { gameManager = _manager; }
 
         protected void SetNextNowPlayer() { gameManager.SetNextNowPlayer(); }
 
-        protected Character GetNowPlayer() { return gameManager.characterList[gameManager.nowPlayer]; }
+        protected Character GetNowCharacter() { return gameManager.GetNowCharacter(); }
 
         protected void SetSelectCharacter(int _no) { gameManager.SetSelectCharacter(_no); }
 
-        protected Character GetSelectCharacter() { return gameManager.characterList[gameManager.selectPlayer]; }
+        protected Character GetSelectCharacter() { return gameManager.GetSelectCharacter(); }
 
-        protected bool IsPandoraDice() { return gameManager.pandoraDiceFlg; }
-        
-        protected void ChangeTurn() { gameManager.changeTurnFlg = true; }
+        protected bool IsPandoraDice() { return gameManager.IsPandoraDice(); }
+
+        protected void ChangeTurn() { gameManager.ChangeTurn(); }
 
         abstract public void Update();
 
@@ -69,10 +71,23 @@ public class GameManager : MonoBehaviour
         return characterList[selectPlayer];
     }
 
+    public void AddFutureAttackObject(FutureAttackObject _obj)
+    {
+        var turn = (FutureAttackCheckObject)turnObject[(int)TurnType.FutureAttackCheck];
+        turn.AddFutureAttackObject(_obj);
+    }
+
+    public bool IsPandoraDice() { return pandoraDiceFlg; }
+
+    public void ChangeTurn() { changeTurnFlg = true; }
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        for(int i = 0; i < TURN_TYPE_COUNT; i++)
+        {
+            turnObject[i].SetGameManager(this);
+        }
     }
 
     // Update is called once per frame
@@ -85,12 +100,28 @@ public class GameManager : MonoBehaviour
         nowTurnType = nextTurn;
         turnObject[(int)nowTurnType].Init();
 
-        nextTurn = (TurnType)((int)(nextTurn) + 1 % (int)(TurnType.TurnEnd + 1));
+        nextTurn = (TurnType)((int)(nextTurn) + 1 % TURN_TYPE_COUNT);
         changeTurnFlg = false;
     }
 
+    [SerializeReference]
+    TurnObjectBase[] turnObject = new TurnObjectBase[]{
+        new TurnStartObject(),
+        new FutureAttackCheckObject(),
+        new IceCheckObject(),
+        new StanCheckObject(),
+        new GuardEndCheckObject(),
+        new PandoraDiceCheckObject(),
+        new SelectActionObject(),
+        new DiceRollActionObject(),
+        new DiceEffectObject(),
+        new PandoraDiceStartCheckObject(),
+        new PandoraDiceCharaSelectActionObject(),
+        new PandoraDiceRollActionObject(),
+        new DoubleEndCheckObject(),
+        new TurnEndObject(),
+    };
 
-    TurnObjectBase[] turnObject = new TurnObjectBase[(int)TurnType.TurnEnd + 1];
     TurnType nowTurnType = TurnType.TurnStart;
     TurnType nextTurn = TurnType.FutureAttackCheck;
     bool changeTurnFlg = false;
