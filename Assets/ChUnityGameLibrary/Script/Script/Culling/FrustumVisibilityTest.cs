@@ -94,9 +94,9 @@ public class FrustumVisibilityTest : MonoBehaviour
 
     public BoxCollider testObject = null;
 
-    private bool visible = false;
+    //private bool visible = false;
 
-    private List<Panel> lookPanelList = new List<Panel>();
+    //private List<Panel> lookPanelList = new List<Panel>();
 
     // Update is called once per frame
     void Update()

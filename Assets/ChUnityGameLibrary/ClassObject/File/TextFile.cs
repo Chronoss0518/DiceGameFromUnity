@@ -23,7 +23,7 @@ namespace ChStd
 
                 reader.Close();
             }
-            catch (System.Exception e) { text = ""; }
+            catch (System.Exception) { text = ""; }
 
 
         }
