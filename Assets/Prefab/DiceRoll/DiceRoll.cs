@@ -25,9 +25,14 @@ public class DiceRoll : MonoBehaviour
         diceObject.texture = _image;
     }
 
+    void Start()
+    {
+        
+    }
+
     void Update()
     {
-        if (anim != null) return;
+        if (anim == null) return;
         if (anim.isPlaying) return;
 
         if(diceAnimationEndFrame <= diceAnimationEndFrameCount) return;
