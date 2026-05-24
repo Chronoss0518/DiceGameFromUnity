@@ -1,28 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DiceObject
 {
     public const int DICE_SIDED_COUNT = 6;
 
-    abstract public class DiceEffectObject
+    private struct DiceValueObject
     {
-        abstract public void Update(Character _user,Character _target);
+        public DiceEffectBase diceEffect;
+        public Texture2D diceValueImage;
     }
 
     public string GetDiceName() { return diceName; }
 
     public void SetDiceName(string _name) { diceName = _name; }
 
-    public DiceEffectObject GetDiceEffectObject(int _num)
+    public Texture2D GetDiceImage(int _no)
+    {
+        if (_no < 0) return null;
+        if (_no >= DICE_SIDED_COUNT) return null;
+        return diceEffectList[_no].diceValueImage;
+    }
+
+    public DiceEffectBase GetDiceEffectObject(int _num)
     {
         if (_num < 0) return null;
         if (_num >= DICE_SIDED_COUNT) return null;
-        return diceEffectList[_num];
+        return diceEffectList[_num].diceEffect;
     }
 
     string diceName = "";
 
-    DiceEffectObject[] diceEffectList = new DiceEffectObject[DICE_SIDED_COUNT];
+    DiceValueObject[] diceEffectList = new DiceValueObject[DICE_SIDED_COUNT];
 }
