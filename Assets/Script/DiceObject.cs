@@ -13,6 +13,11 @@ public class DiceObject
         public Texture2D diceValueImage;
     }
 
+    public static int GetDiceRollResult()
+    {
+        return Random.Range(0, DICE_SIDED_COUNT - 1);
+    }
+
     public string GetDiceName() { return diceName; }
 
     public void SetDiceName(string _name) { diceName = _name; }

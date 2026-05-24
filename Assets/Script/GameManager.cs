@@ -34,6 +34,14 @@ public class GameManager : MonoBehaviour
         virtual public void Init() { }
 
         protected GameManager gameManager { get; private set; } = null;
+
+        [SerializeField, ChUnity.ReadOnly]
+        protected TurnType thisType = TurnType.TurnStart;
+    }
+
+    public int CreateDiceRollResult()
+    {
+        return DiceObject.GetDiceRollResult();
     }
 
     public void SetNextNowPlayer()
@@ -42,23 +50,30 @@ public class GameManager : MonoBehaviour
         nowPlayer = (nowPlayer + 1) % characterList.Count;
     }
 
-    public void SetSelectCharacter(int _no)
-    {
-        if (_no < 0) return;
-        if (characterList.Count <= _no) return;
-        selectPlayer = _no;
-    }
-
     public void SetSlideText(string _text)
     {
         if (slideObject == null) return;
+        if (!slideObject.isStop) return;
         slideObject.SetText(_text);
     }
 
     public void SetSlideImage(Texture2D _image)
     {
         if (slideObject == null) return;
+        if (!slideObject.isStop) return;
         slideObject.SetImage(_image);
+    }
+
+    public void SetSelectDiceAction(int _no)
+    {
+        var turn = (SelectActionObject)turnObject[(int)TurnType.SelectAction];
+        turn.SetSelectDice(_no);
+    }
+
+    public void SetSelectCharacterAction(int _no)
+    {
+        var turn = (SelectActionObject)turnObject[(int)TurnType.SelectAction];
+        turn.SetSelectDice(_no);
     }
 
     public void SetMessage(string _message)
@@ -83,13 +98,28 @@ public class GameManager : MonoBehaviour
 
     public Character GetSelectCharacter()
     {
-        if (characterList.Count <= selectPlayer) return null;
-        return characterList[selectPlayer];
+        var turn = (SelectActionObject)turnObject[(int)TurnType.SelectAction];
+        if (characterList.Count <= turn.GetSelectCharacterNo()) return null;
+        return characterList[turn.GetSelectCharacterNo()];
+    }
+
+    public int GetSelectDice()
+    {
+        var turn = (SelectActionObject)turnObject[(int)TurnType.SelectAction];
+        return turn.GetSelectDiceNo();
     }
 
     public DiceRoll GetDiceRollPrefab()
     {
         return diceRollPrefab;
+    }
+
+    public int GetAnimationEndFrame() { return animationEndFrame; }
+
+    public int GetNormalDiceRollResult()
+    {
+        var turn = (DiceRollActionObject)turnObject[(int)TurnType.DiceRollAction];
+        return turn.diceRollResult;
     }
 
     public void AddFutureAttackObject(FutureAttackObject _obj)
@@ -103,7 +133,7 @@ public class GameManager : MonoBehaviour
     public bool IsSlideTextStop() 
     {
         if (slideObject == null) return true;
-        return slideObject.IsStop;
+        return slideObject.isStop;
     }
 
     public void ChangeTurn() { changeTurnFlg = true; }
@@ -168,8 +198,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     bool changeTurnFlg = false;
 
+    [SerializeField]
+    int animationEndFrame = 600;
+
     int nowPlayer = 0;
-    int selectPlayer = 0;
     bool pandoraDiceFlg = false;
     List<Character>characterList = new List<Character>();
 }
