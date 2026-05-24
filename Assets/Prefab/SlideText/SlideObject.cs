@@ -17,7 +17,7 @@ public class SlideObject : MonoBehaviour
     [SerializeField]
     Animation anim = null;
 
-    public bool IsStop
+    public bool isStop
     {
         get
         {
@@ -37,6 +37,8 @@ public class SlideObject : MonoBehaviour
         image.gameObject.SetActive(false);
 
         anim.Play();
+
+        runInitializeFlg = false;
     }
 
     public void SetImage(Texture2D _image)
@@ -50,11 +52,16 @@ public class SlideObject : MonoBehaviour
         image.gameObject.SetActive(true);
 
         anim.Play();
+
+        runInitializeFlg = false;
     }
 
     void Start()
     {
+        if (!runInitializeFlg) return;
         if (anim == null) return;
         anim.Stop();
     }
+
+    bool runInitializeFlg = true;
 }
