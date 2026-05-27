@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -23,6 +25,32 @@ public class GameManager : MonoBehaviour
     }
 
     const int TURN_TYPE_COUNT = (int)TurnType.TurnEnd + 1;
+
+    public static string GenerateUserName(string _text,Character _user)
+    {
+        return _text.Replace("%u", _user.GetUserName());
+    }
+
+    public static string GenerateTargetName(string _text, Character _user)
+    {
+        return _text.Replace("%t", _user.GetUserName());
+    }
+
+    public static string GenerateDamage(string _text, int _damage)
+    {
+        return _text.Replace("%d", _damage.ToString());
+    }
+
+    public static string GenerateHeal(string _text, int _heal)
+    {
+        return _text.Replace("%h", _heal.ToString());
+    }
+
+    public static string GenerateSetPoint(string _text, int _point)
+    {
+        return _text.Replace("%p", _point.ToString());
+    }
+
 
     [System.Serializable]
     abstract public class TurnObjectBase
@@ -53,14 +81,12 @@ public class GameManager : MonoBehaviour
     public void SetSlideText(string _text)
     {
         if (slideObject == null) return;
-        if (!slideObject.isStop) return;
         slideObject.SetText(_text);
     }
 
     public void SetSlideImage(Texture2D _image)
     {
         if (slideObject == null) return;
-        if (!slideObject.isStop) return;
         slideObject.SetImage(_image);
     }
 
@@ -122,6 +148,12 @@ public class GameManager : MonoBehaviour
         return turn.diceRollResult;
     }
 
+    public string GetMessage()
+    {
+        if (messageBox == null) return "";
+        return messageBox.GetText();
+    }
+
     public void AddFutureAttackObject(FutureAttackObject _obj)
     {
         var turn = (FutureAttackCheckObject)turnObject[(int)TurnType.FutureAttackCheck];
@@ -137,6 +169,20 @@ public class GameManager : MonoBehaviour
     }
 
     public void ChangeTurn() { changeTurnFlg = true; }
+
+    public void CharacterDeathCheck()
+    {
+        int deathCount = 0;
+        foreach(var chara in characterList)
+        {
+            if (!chara.IsLose()) continue;
+            deathCount++;
+        }
+
+        if (deathCount <= characterList.Count - 1) return;
+        gameEndFlg = true;
+
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -163,7 +209,7 @@ public class GameManager : MonoBehaviour
     }
 
     [SerializeReference]
-    TurnObjectBase[] turnObject = new TurnObjectBase[]{
+    TurnObjectBase[] turnObject = new TurnObjectBase[TURN_TYPE_COUNT]{
         new TurnStartObject(),
         new FutureAttackCheckObject(),
         new IceCheckObject(),
@@ -201,7 +247,21 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     int animationEndFrame = 600;
 
+    [SerializeField, ChUnity.ReadOnly]
+    AnimationPrefabBase runEffectAnimation = null;
+
+    [SerializeField]
+    DiceDeck sampleDeck = new DiceDeck();
+
+    [SerializeField]
+    SystemData systemData = SystemData.ins;
+
     int nowPlayer = 0;
     bool pandoraDiceFlg = false;
     List<Character>characterList = new List<Character>();
+
+    [SerializeField, ChUnity.ReadOnly]
+    bool gameEndFlg = false;
+
+
 }

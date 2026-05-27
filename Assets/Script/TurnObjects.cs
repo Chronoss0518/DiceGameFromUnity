@@ -283,7 +283,7 @@ public class DiceRollActionObject : GameManager.TurnObjectBase
 
         if(resultString == "")
         {
-            resultString = DICE_ROLL_MESSAGE + DICE_RESULT_MESSAGE + "[" + diceRollResult.ToString() + "]";
+            resultString = DICE_ROLL_MESSAGE + DICE_RESULT_MESSAGE + "[" + (diceRollResult + 1).ToString() + "]";
             gameManager.SetMessage(resultString);
         }
 
