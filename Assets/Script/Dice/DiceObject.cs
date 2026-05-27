@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+[System.Serializable]
 public class DiceObject
 {
     public const int DICE_SIDED_COUNT = 6;
 
-    private struct DiceValueObject
+    [System.Serializable]
+    private class DiceValueObject
     {
-        public DiceEffectBase diceEffect;
-        public Texture2D diceValueImage;
+        public DiceEffectBase diceEffect = null;
+        public Texture2D diceValueImage = null;
     }
 
     public static int GetDiceRollResult()
@@ -36,7 +38,9 @@ public class DiceObject
         return diceEffectList[_num].diceEffect;
     }
 
+    [SerializeField]
     string diceName = "";
 
+    [SerializeField]
     DiceValueObject[] diceEffectList = new DiceValueObject[DICE_SIDED_COUNT];
 }

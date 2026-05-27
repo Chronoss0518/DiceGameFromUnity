@@ -2,17 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class DiceDeck
 {
     public const int HAVE_MAX_DICE = 4;
-
-    public void InitDeck()
-    {
-        if (IsDeckEmpty()) return;
-
-
-
-    }
 
     public void SetDeckName(string _name) { deckName = _name; }
 
@@ -54,9 +47,12 @@ public class DiceDeck
         return true;
     }
 
+    [SerializeField]
     string deckName = "";
 
+    [SerializeField]
     DiceObject[] dices = new DiceObject[HAVE_MAX_DICE];
 
+    [SerializeField]
     DiceObject pandoraDice = null;
 }
