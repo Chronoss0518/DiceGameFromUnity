@@ -2,12 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class FutureAttackObject
-{
-    [SerializeField,ChUnity.ReadOnly]
-    int turnCount = 0;
 
-    [SerializeField, ChUnity.ReadOnly]
-    int damage = 0;
+public class FutureAttackObject : ScriptableObject
+{
+    [SerializeField]
+    protected AnimationPrefabBase animationPrefab = null;
+
+    [SerializeField]
+    public int turnCount = 0;
+
+    [SerializeField]
+    public int damage = 0;
+
+    [SerializeField]
+    public string text = "";
 }
