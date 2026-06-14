@@ -7,9 +7,17 @@ public class Character : MonoBehaviour
     public const int HP_MAX = 30;
     public const int PANDORA_DICE_COUNT = 6;
 
+    public void SetSampleDeck(DiceDeck _deck)
+    {
+        if (_deck == null) return;
+        useDeck = _deck;
+    }
+
     public bool IsLose() { return hp < 0; }
 
     public void SetIceTurnCount(int _count) { iceTurnCount = _count; }
+
+    public int GetIceTurnCount() { return iceTurnCount; }
 
     public bool IsIceTurn()
     {
@@ -40,7 +48,7 @@ public class Character : MonoBehaviour
         return useDeck.GetDiceObject(_no);
     }
 
-    public bool IsPandoraDiceCount() { return pandoraDiceCount < 0; }
+    public bool IsPandoraDiceCount() { return pandoraDiceCount <= 0; }
 
     public void SubPandoraDiceCount() { pandoraDiceCount--; }
 
@@ -70,13 +78,37 @@ public class Character : MonoBehaviour
         hp += _heal;
     }
 
+    public void SetUserName(string _name)
+    {
+        userName = _name;
+    }
+
+    public string GetUserName()
+    {
+        return userName;
+    }
+
+    [SerializeField,ChUnity.ReadOnly]
+    string userName = "";
+
+    [SerializeField, ChUnity.ReadOnly]
     int iceTurnCount = 0;
+
+    [SerializeField, ChUnity.ReadOnly]
     bool stanFlg = false;
+
+    [SerializeField, ChUnity.ReadOnly]
     bool guardFlg = false;
+
+    [SerializeField, ChUnity.ReadOnly]
     bool doubleFlg = false;
 
+    [SerializeField, ChUnity.ReadOnly]
     int hp = HP_MAX;
+
+    [SerializeField, ChUnity.ReadOnly]
     int pandoraDiceCount = PANDORA_DICE_COUNT;
 
+    [SerializeField]
     DiceDeck useDeck = null;
 }
