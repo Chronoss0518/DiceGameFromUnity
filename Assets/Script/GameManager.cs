@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
         PandoraDiceStartCheck,
         PandoraDiceCharaSelectAction,//Playerのアクション//
         PandoraDiceRollAction,//Playerのアクション//
+        PandoraDiceEffect,
         DoubleEndCheck,
         TurnEnd,
     }
@@ -70,6 +71,12 @@ public class GameManager : MonoBehaviour
     public int CreateDiceRollResult()
     {
         return DiceObject.GetDiceRollResult();
+    }
+
+    public void SetNextTurnObject(TurnType _type)
+    {
+        if (_type < nowTurnType) return;
+        nextTurn = _type;
     }
 
     public void SetNextNowPlayer()
@@ -135,9 +142,9 @@ public class GameManager : MonoBehaviour
         return turn.GetSelectDiceNo();
     }
 
-    public DiceRoll GetDiceRollPrefab()
+    public Camera GetUseCamera()
     {
-        return diceRollPrefab;
+        return useCamera;
     }
 
     public int GetAnimationEndFrame() { return animationEndFrame; }
@@ -145,6 +152,12 @@ public class GameManager : MonoBehaviour
     public int GetNormalDiceRollResult()
     {
         var turn = (DiceRollActionObject)turnObject[(int)TurnType.DiceRollAction];
+        return turn.diceRollResult;
+    }
+
+    public int GetPandoraDiceRollResult()
+    {
+        var turn = (PandoraDiceRollActionObject)turnObject[(int)TurnType.PandoraDiceRollAction];
         return turn.diceRollResult;
     }
 
@@ -159,8 +172,6 @@ public class GameManager : MonoBehaviour
         var turn = (FutureAttackCheckObject)turnObject[(int)TurnType.FutureAttackCheck];
         turn.AddFutureAttackObject(_obj);
     }
-
-    public bool IsPandoraDice() { return pandoraDiceFlg; }
 
     public bool IsSlideTextStop() 
     {
@@ -187,7 +198,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for(int i = 0; i < TURN_TYPE_COUNT; i++)
+        for (int i = 0; i < TURN_TYPE_COUNT; i++)
         {
             turnObject[i].SetGameManager(this);
         }
@@ -209,7 +220,7 @@ public class GameManager : MonoBehaviour
     }
 
     [SerializeReference]
-    TurnObjectBase[] turnObject = new TurnObjectBase[TURN_TYPE_COUNT]{
+    TurnObjectBase[] turnObject =  new TurnObjectBase[TURN_TYPE_COUNT]{
         new TurnStartObject(),
         new FutureAttackCheckObject(),
         new IceCheckObject(),
@@ -222,12 +233,13 @@ public class GameManager : MonoBehaviour
         new PandoraDiceStartCheckObject(),
         new PandoraDiceCharaSelectActionObject(),
         new PandoraDiceRollActionObject(),
+        new PanodraDiceEffectObject(),
         new DoubleEndCheckObject(),
         new TurnEndObject(),
-    };
+        };
 
     [SerializeField]
-    DiceRoll diceRollPrefab = null;
+    Camera useCamera = null;
 
     [SerializeField]
     SlideObject slideObject = null;
@@ -247,9 +259,6 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     int animationEndFrame = 600;
 
-    [SerializeField, ChUnity.ReadOnly]
-    AnimationPrefabBase runEffectAnimation = null;
-
     [SerializeField]
     DiceDeck sampleDeck = new DiceDeck();
 
@@ -257,7 +266,6 @@ public class GameManager : MonoBehaviour
     SystemData systemData = SystemData.ins;
 
     int nowPlayer = 0;
-    bool pandoraDiceFlg = false;
     List<Character>characterList = new List<Character>();
 
     [SerializeField, ChUnity.ReadOnly]

@@ -9,6 +9,7 @@ abstract public class DiceEffectBase : ScriptableObject
     public const string GUARD_TEXT = "%t‚ÍUŒ‚‚ğƒK[ƒh‚µ‚½!!";
     public const string HEALING_TEXT = "%u‚Í%h‰ñ•œ‚µ‚½";
 
+    public UseAnimationObject animation {  get { return animationPrefab; } }
 
     abstract public void Run(GameManager _gm, Character _user, Character _target);
 
@@ -36,7 +37,7 @@ abstract public class DiceEffectBase : ScriptableObject
     }
 
     [SerializeField]
-    protected AnimationPrefabBase animationPrefab = null;
+    protected UseAnimationObject animationPrefab = new UseAnimationObject();
 
     [SerializeField]
     protected string effectText = "";
@@ -46,7 +47,6 @@ abstract public class DiceEffectBase : ScriptableObject
 [CreateAssetMenu(fileName = "NormalAttack", menuName = "DiceEffect/NormalAttack")]
 public class DE_NormalAttack : DiceEffectBase
 {
-    
     public override void Run(GameManager _gm, Character _user, Character _target)
     {
         string text = GameManager.GenerateUserName(effectText, _user);
@@ -128,7 +128,7 @@ public class DE_FutureAttack : DE_NormalAttack
     }
 
     [SerializeField]
-    int sacrificePoint = 0;
+    FutureAttackObject futureAttack = null;
 }
 
 //‰ñ•œ‚µ‚È‚ª‚çUŒ‚//
@@ -166,9 +166,6 @@ public class DE_ChangeHP : DiceEffectBase
 
     }
 
-    [SerializeField]
-    protected AnimationPrefabBase guardAnimationPrefab = null;
-
 }
 
 //ƒ_ƒ[ƒW2”{Œø‰Ê‚Ì•t—^//
@@ -177,7 +174,7 @@ public class DE_SetDouble : DiceEffectBase
 {
     public override void Run(GameManager _gm, Character _user, Character _target)
     {
-
+        _user.SetDoubleFlg(true);
     }
 
 }
@@ -188,7 +185,7 @@ public class DE_SetGuard : DiceEffectBase
 {
     public override void Run(GameManager _gm, Character _user, Character _target)
     {
-
+        _user.SetGuardFlg(true);
     }
 
 }
@@ -199,31 +196,44 @@ public class DE_SetStan : DiceEffectBase
 {
     public override void Run(GameManager _gm, Character _user, Character _target)
     {
-
+        _target.SetStanFlg();
     }
 
 }
 
-//‘Šè‚ÉStan‚ğ—^‚¦‚é//
+//‘Šè‚ÉIce‚ğ—^‚¦‚é//
 [CreateAssetMenu(fileName = "SetIce", menuName = "DiceEffect/SetIce")]
 public class DE_SetIce : DiceEffectBase
 {
     public override void Run(GameManager _gm, Character _user, Character _target)
     {
-
+        _target.SetIceTurnCount(iceCount);
     }
 
     [SerializeField]
     int iceCount = 0;
 }
 
-//‘Šè‚ÉStan‚ğ—^‚¦‚é//
+//©g‚ÌHP‚ğ’è”‚É‚·‚é//
 [CreateAssetMenu(fileName = "SetHP", menuName = "DiceEffect/SetHP")]
 public class DE_SetHP : DiceEffectBase
 {
     public override void Run(GameManager _gm, Character _user, Character _target)
     {
+        _user.SetHP(hp);
+    }
 
+    [SerializeField]
+    int hp = 0;
+}
+
+//Pandora Dice‚ğÀs‚·‚é//
+[CreateAssetMenu(fileName = "StartPandoraDice", menuName = "DiceEffect/StartPandoraDice")]
+public class DE_StartPandoraDice : DiceEffectBase
+{
+    public override void Run(GameManager _gm, Character _user, Character _target)
+    {
+        _gm.SetNextTurnObject(GameManager.TurnType.PandoraDiceStartCheck);
     }
 
     [SerializeField]
