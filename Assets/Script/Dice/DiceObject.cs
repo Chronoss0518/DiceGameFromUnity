@@ -17,7 +17,7 @@ public class DiceObject
 
     public static int GetDiceRollResult()
     {
-        return Random.Range(0, DICE_SIDED_COUNT - 1);
+        return Random.Range(0, DICE_SIDED_COUNT);
     }
 
     public string GetDiceName() { return diceName; }
