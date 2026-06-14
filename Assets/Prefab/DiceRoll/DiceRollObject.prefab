@@ -33,10 +33,10 @@ RectTransform:
   m_Father: {fileID: 8653636632106177230}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 45}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 774, y: 969}
-  m_SizeDelta: {x: -1120, y: -2668}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8653636631074999059
 CanvasRenderer:
@@ -201,7 +201,7 @@ Canvas:
   m_GameObject: {fileID: 8653636632106177226}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -282,6 +282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   diceObject: {fileID: 8653636631074999058}
+  useCanvas: {fileID: 8653636632106177225}
   anim: {fileID: 8653636632106177231}
   diceAnimationEndFrame: 100
   diceAnimationEndFrameCount: 0
